@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Anonymous+Pro:wght@700&family=Roboto&display=swap');
+
+h1,h2,h3,h4,h5,h6,p,span,a,button,::placeholder,tr,td,th,table {
+  font-family: 'Anonymous Pro', monospace;
+}
+::placeholder {
+  color:#000 !important;
+}
+:focus-visible{
+  border:0 !important;
+  outline: 0 !important;
+}
+table,tr,td,th{
+  font-size: 20px ;
+}
