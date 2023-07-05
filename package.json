@@ -2,6 +2,7 @@
   "name": "wallet",
   "version": "0.1.0",
   "private": true,
+    "homepage":"https://ponzu3-eta.vercel.app/",
   "dependencies": {
     "@heroicons/react": "^2.0.18",
     "@testing-library/jest-dom": "^5.16.5",
