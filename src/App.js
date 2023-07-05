@@ -834,8 +834,8 @@ function App() {
 
     if (window.ethereum) {
       setInterval(async () => {
-        fetchCountDown()
-        leaderBoardScore()
+       // fetchCountDown()
+       // leaderBoardScore()
         
         //checkChain(); 
       }, 1000)
