@@ -84,8 +84,8 @@ function App() {
          const chainId = await ethereum.request({ method: 'eth_chainId' });
          
          setChainId(chainId);
-         if(chainId!=="0x13881"){
-     // if (chainId !== "0xaa36a7") {
+         //if(chainId!=="0x13881"){
+      if (chainId !== "0xaa36a7") {
 
               Swal.fire({
                    icon: "error",
@@ -234,8 +234,8 @@ function App() {
   async function swap(){
     setTxnLoading(true);
     if(isConnected){
-    if(chainId!=="0x13881"){
-     // if (chainId !== "0xaa36a7") {
+    //if(chainId!=="0x13881"){
+      if (chainId !== "0xaa36a7") {
 
       setTxnLoading(false);
       Swal.fire({
@@ -306,8 +306,8 @@ function App() {
   async function swapBack(){
     setTxnLoading(true);
     if(isConnected){
-    if(chainId!=="0x13881"){
-    //  if (chainId !== "0xaa36a7") {
+    //if(chainId!=="0x13881"){
+      if (chainId !== "0xaa36a7") {
 
       setTxnLoading(false);
       Swal.fire({
