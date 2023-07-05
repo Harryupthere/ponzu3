@@ -69,11 +69,11 @@ function App() {
          console.log("error : ", error);
     }
   }
-  useEffect(()=>{
-    if (isConnected) {
-      contractBalance();
-    }
-  },[isConnected,chainId,txDone,address])
+  // useEffect(()=>{
+  //   if (isConnected) {
+  //     contractBalance();
+  //   }
+  // },[isConnected,chainId,txDone,address])
   
 
 
@@ -126,16 +126,16 @@ function App() {
     setValue2(eth/10**18);
   }
 
-  useEffect(()=>{
-    if (isConnected) {
-      if(!back){
-        swapConvert();
-      }
-      else{
-        swapBackConvert();
-      }
-    }
-  },[value1])
+  // useEffect(()=>{
+  //   if (isConnected) {
+  //     if(!back){
+  //       swapConvert();
+  //     }
+  //     else{
+  //       swapBackConvert();
+  //     }
+  //   }
+  // },[value1])
 
 
   //handle the value for input 1
@@ -816,32 +816,32 @@ function App() {
       console.log("error : ", error);
     }
   }
-  useEffect( () => {
-    const checkChain = async () => {
-      const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+  // useEffect( () => {
+  //   const checkChain = async () => {
+  //     const chainId = await window.ethereum.request({ method: 'eth_chainId' });
      
-      setChainId(chainId);
-      //if (chainId !== "0x13881") {
-      if (chainId !== "0xaa36a7") {
+  //     setChainId(chainId);
+  //     //if (chainId !== "0x13881") {
+  //     if (chainId !== "0xaa36a7") {
 
         
 
 
-      } else {
-        fetchCountDown()
-      }
-    }
+  //     } else {
+  //       fetchCountDown()
+  //     }
+  //   }
 
-    if (window.ethereum) {
-      setInterval(async () => {
-       // fetchCountDown()
-       // leaderBoardScore()
+  //   if (window.ethereum) {
+  //     setInterval(async () => {
+  //      // fetchCountDown()
+  //      // leaderBoardScore()
         
-        //checkChain(); 
-      }, 1000)
-    }
+  //       //checkChain(); 
+  //     }, 1000)
+  //   }
 
-  },[])
+  // },[])
 
   return (
     <div className="App">
