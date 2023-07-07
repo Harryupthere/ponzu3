@@ -2,7 +2,7 @@ import { MdOutlineSwapVert} from 'react-icons/md';
 import Swal from "sweetalert2";
 import HashLoader from "react-spinners/HashLoader";
 import { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
+//import { ethers } from 'ethers';
 import { useAccount, useDisconnect } from 'wagmi'
 import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum'
 import { Web3Modal } from '@web3modal/react'
@@ -10,7 +10,12 @@ import { useWeb3Modal } from '@web3modal/react'
 import { configureChains, createConfig, WagmiConfig } from 'wagmi'
 import { polygonMumbai, mainnet, polygon, bscTestnet } from 'wagmi/chains'
 import './App.css';
-import connectContract, {Address1, Abi1, contract} from './connectContract';
+import 
+//connectContract,
+ {Address1,
+   Abi1,
+  // contract
+  } from './connectContract';
 import Web3, { ContractOnceRequiresCallbackError } from 'web3';
 import { sepolia } from 'viem/chains';
 const web3 = new Web3(window.ethereum);
@@ -49,12 +54,12 @@ function App() {
   const [countdown, setCountdown] = useState({ days: "", hours: "", minutes: "", seconds: "" })
   const [leaderboard,setLeaderboard] = useState([])
   // connect smart contract with ui
-  useEffect(() => {
-    if (isConnected) {
-      connectContract();
-      console.log("connected");
-    }
-  },[isConnected])
+  // useEffect(() => {
+  //   if (isConnected) {
+  //     connectContract();
+  //     console.log("connected");
+  //   }
+  // },[isConnected])
 
   //get the total ether in the contract
   async function contractBalance() {
@@ -84,7 +89,7 @@ function App() {
          const chainId = await ethereum.request({ method: 'eth_chainId' });
          
          setChainId(chainId);
-         //if(chainId!=="0x13881"){
+        // if(chainId!=="0x13881"){
       if (chainId !== "0xaa36a7") {
 
               Swal.fire({
@@ -100,42 +105,42 @@ function App() {
 },[address])
 
   //Convert the eth into tokens 
-  async function swapConvert(){
-    let token
-    try {
+  // async function swapConvert(){
+  //   let token
+  //   try {
 
-         token =  await contract.swapConvert((totalEth.toString()),(ethers.utils.parseEther(value1)));
+  //        token =  await contract.swapConvert((totalEth.toString()),(ethers.utils.parseEther(value1)));
          
         
-    }catch (error) {
-         console.log("error : ", error);
-    }
-    setValue2(token/10**18);
-  }
-  
+  //   }catch (error) {
+  //        console.log("error : ", error);
+  //   }
+  //   setValue2(token/10**18);
+  // }
+  ////////////////////////////////////////
   
 
   //Convert the tokens into eth
-  async function swapBackConvert(){
-    let eth;
-    try{
-      eth = await contract.swapBackConvert(ethers.utils.parseEther(value1))
-    }catch(error){
-      console.log("error : ", error);
-    }
-    setValue2(eth/10**18);
-  }
-
-  useEffect(()=>{
-    if (isConnected) {
-      if(!back){
-        swapConvert();
-      }
-      else{
-        swapBackConvert();
-      }
-    }
-  },[value1])
+  // async function swapBackConvert(){
+  //   let eth;
+  //   try{
+  //     eth = await contract.swapBackConvert(ethers.utils.parseEther(value1))
+  //   }catch(error){
+  //     console.log("error : ", error);
+  //   }
+  //   setValue2(eth/10**18);
+  // }
+//////////////////////////////////////////
+  // useEffect(()=>{
+  //   if (isConnected) {
+  //     if(!back){
+  //       swapConvert();
+  //     }
+  //     else{
+  //       swapBackConvert();
+  //     }
+  //   }
+  // },[value1])
 
 
   //handle the value for input 1
@@ -765,7 +770,7 @@ function App() {
      // console.log(countDownDate1)
      // return countDownDate
 
-      let  countDownDate = new Date("Jul 5, 2023 15:37:25").getTime();
+      let  countDownDate = new Date("Jul 10, 2023 15:37:25").getTime();
 
 
       //   // Get today's date and time
