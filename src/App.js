@@ -14,7 +14,7 @@ import connectContract, {contract} from './connectContract';
 import Web3 from 'web3';
 import Abi1 from './abi.json'
 
-//const web3 = new Web3(window.ethereum);
+const web3 = new Web3(window.ethereum);
 let Address1 = "0xc0729752466d1797dAb25afC12b05d7Ba8ac434b"
 //let contractCall = new web3.eth.Contract(Abi1, Address1);
 const chains = [polygonMumbai, mainnet, polygon]
