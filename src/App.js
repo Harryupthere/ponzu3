@@ -2,6 +2,7 @@ import { MdOutlineSwapVert} from 'react-icons/md';
 import Swal from "sweetalert2";
 import HashLoader from "react-spinners/HashLoader";
 import { useState, useEffect } from 'react';
+//import { ethers } from 'ethers';
 import { useAccount, useDisconnect } from 'wagmi'
 import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum'
 import { Web3Modal } from '@web3modal/react'
@@ -10,17 +11,19 @@ import { configureChains, createConfig, WagmiConfig } from 'wagmi'
 import { polygonMumbai, mainnet, polygon, bscTestnet } from 'wagmi/chains'
 import './App.css';
 import 
+//connectContract,
  {Address1,
    Abi1,
+  // contract
   } from './connectContract';
-import Web3 from 'web3';
+import Web3, { ContractOnceRequiresCallbackError } from 'web3';
 import { sepolia } from 'viem/chains';
 const web3 = new Web3(window.ethereum);
 
 let contractCall = new web3.eth.Contract(Abi1, Address1);
 const chains = [
- // polygonMumbai, mainnet, polygon,
-  sepolia
+  polygonMumbai, mainnet, polygon,
+ // sepolia
 ]
 
 
@@ -37,8 +40,8 @@ const wagmiConfig = createConfig({
 const ethereumClient = new EthereumClient(wagmiConfig, chains);
 function App() {
   
-  const { address, isConnected,isConnecting, isDisconnected } = useAccount()
-  const { isOpen, open, close, setDefaultChain } = useWeb3Modal()
+ // const { address, isConnected,isConnecting, isDisconnected } = useAccount()
+  //const { isOpen, open, close, setDefaultChain } = useWeb3Modal()
   const [value1, setValue1] = useState();
   const [value2, setValue2] = useState(0);
   const [totalEth, setTotalEth] = useState(0);
@@ -50,10 +53,21 @@ function App() {
   const [userEth, setUserEth] = useState('0.0');
   const [countdown, setCountdown] = useState({ days: "", hours: "", minutes: "", seconds: "" })
   const [leaderboard,setLeaderboard] = useState([])
-  // connect smart contract with ui
-  // useEffect(() => {
-  //   if (isConnected) {
-  //     connectContract();
+  const [address,setAccount] = useState('')
+  const [isConnected,setIsConnected] = useState(false)
+ 
+
+  const open=async()=>{
+    let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    setAccount(accounts[0]) 
+    setIsConnected(true)
+  }
+
+  useEffect(()=>{
+    if (address.length>0) {
+      setIsConnected(true)
+    }
+  },[])
 
   //get the total ether in the contract
   async function contractBalance() {
@@ -72,7 +86,7 @@ function App() {
     if (isConnected) {
       contractBalance();
     }
-  },[isConnected,chainId,txDone,address])
+  },[])
   
 
 
@@ -98,11 +112,50 @@ function App() {
     {checkChain();}
 },[address])
 
+  //Convert the eth into tokens 
+  // async function swapConvert(){
+  //   let token
+  //   try {
+
+  //        token =  await contract.swapConvert((totalEth.toString()),(ethers.utils.parseEther(value1)));
+         
+        
+  //   }catch (error) {
+  //        console.log("error : ", error);
+  //   }
+  //   setValue2(token/10**18);
+  // }
+  ////////////////////////////////////////
+  
+
+  //Convert the tokens into eth
+  // async function swapBackConvert(){
+  //   let eth;
+  //   try{
+  //     eth = await contract.swapBackConvert(ethers.utils.parseEther(value1))
+  //   }catch(error){
+  //     console.log("error : ", error);
+  //   }
+  //   setValue2(eth/10**18);
+  // }
+//////////////////////////////////////////
+  // useEffect(()=>{
+  //   if (isConnected) {
+  //     if(!back){
+  //       swapConvert();
+  //     }
+  //     else{
+  //       swapBackConvert();
+  //     }
+  //   }
+  // },[value1])
 
 
   //handle the value for input 1
   async function handleValue1(event){
-
+    // const newValue = event.target.value;
+    // setTxDone(!txDone);
+    // setValue1(newValue);
 
     let newValue;
     if (event.target.value == 0 || event.target.value == '' || event.target.value == null) {
@@ -143,7 +196,54 @@ function App() {
     setValue2(0);
   }
 
-  
+  //swap the eth into tokens
+  // async function swap(){
+  //   setTxnLoading(true);
+  //   if(isConnected){
+  //  // if(chainId!=="0x13881"){
+  //     if (chainId !== "0xaa36a7") {
+
+  //     setTxnLoading(false);
+  //     Swal.fire({
+  //          icon: "error",
+  //          title: "Wrong Network",
+  //          text: "Please connect to Mumbai Testnet",
+  //     });
+  //   }
+  //   else{
+  //     try {
+  //       const tx = await contract.swap({value: ethers.utils.parseEther(value1)});
+        
+  //       await tx.wait();
+  //       setTxnLoading(false);
+  //       setTxDone(!txDone);
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: "Transaction Sucessful",
+  //         text: `You got ${value1}ETH worth PONZU3`,
+  //         footer: `<a href="https://mumbai.polygonscan.com/tx/${tx.hash}" target="_blank">Check the transaction hash on Ethersan</a>`,
+  //       });
+  //       console.log("tx : ", tx);
+  //     } catch (error) {
+  //       setTxnLoading(false);
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Transaction Failed",
+  //         text: error.reason||error.data.message,
+  //    });
+  //       console.log("error : ", error);
+  //     }
+  //   }
+  // }
+  // else{
+  //   setTxnLoading(false);
+  //   Swal.fire({
+  //     icon: "error",
+  //     title: "Transaction Failed",
+  //     text: "Please connect to Metamask",
+  //   });
+  // }
+  // }
   async function swap(){
     setTxnLoading(true);
     if(isConnected){
@@ -299,7 +399,11 @@ function App() {
       console.log("error : ", error);
     }
   }
-  
+  // useEffect(()=>{
+  //   if(isConnected){
+  //     getUserTokens();
+  //   }
+  // },[isConnected,chainId,txDone, address])
 
 
 
