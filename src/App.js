@@ -346,6 +346,84 @@ function App() {
   //     getUserTokens();
   //   }
   // },[])
+  async function insurance() {
+    if (!isConnected) {
+      Swal.fire({
+        icon: "error",
+        title: "Transaction Failed",
+        text: "Please connect to Metamask",
+      });
+      return
+    }
+    Swal.fire({
+      title: 'Please enter token amount',
+      input: 'text',
+      inputAttributes: {
+        autocapitalize: 'off'
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Look up',
+      showLoaderOnConfirm: true,
+
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+
+        if (result.value <= 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Transaction Failed",
+            text: "Please Enter Value Greater then zero",
+          });
+          return
+        }
+        try {
+          // console.log(await contractCall.methods.name().call())
+          result.value=result.value*10**18
+          let insurance = await contractCall.methods.Insurance(result.value.toString())
+          let encoded_tx = insurance.encodeABI();
+
+
+          let gasPrice = await web3.eth.getGasPrice();
+
+          let gasLimit = await web3.eth.estimateGas({
+            gasPrice: web3.utils.toHex(gasPrice),
+            to: Address1,
+            from: address,
+            data: encoded_tx,
+          });
+
+          let trx = await web3.eth.sendTransaction({
+            gasPrice: web3.utils.toHex(gasPrice),
+            gas: web3.utils.toHex(gasLimit),
+            gasPrice: web3.utils.toHex(gasPrice),
+            to: Address1,
+            from: address,
+            data: encoded_tx,
+          }
+          )
+
+          if (trx.transactionHash) {
+            Swal.fire({
+              icon: "success",
+              title: "Transaction Sucessful",
+              footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
+            });
+          }
+
+        } catch (error) {
+          console.log(error)
+          let errMsg = error.code == 100 ? error.message : error.data.message
+          Swal.fire({
+            icon: "error",
+            title: "Transaction Failed",
+            text: errMsg//error.message || error.reason || error.data.message,
+          });
+        }
+      }
+    })
+
+  }
+
 
   return (
     <div className="App">
