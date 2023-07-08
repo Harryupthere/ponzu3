@@ -424,6 +424,292 @@ function App() {
 
   }
 
+  async function burningTime() {
+    if (!isConnected) {
+      Swal.fire({
+        icon: "error",
+        title: "Transaction Failed",
+        text: "Please connect to Metamask",
+      });
+      return
+    }
+    Swal.fire({
+      title: 'Please enter token amount',
+      input: 'text',
+      inputAttributes: {
+        autocapitalize: 'off'
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Look up',
+      showLoaderOnConfirm: true,
+
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+
+        if (result.value <= 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Transaction Failed",
+            text: "Please Enter Value Greater then zero",
+          });
+          return
+        }
+        try {
+          result.value=result.value*10**18
+          let burnTime = await contractCall.methods.burnTime(result.value.toString())
+          let encoded_tx = burnTime.encodeABI();
+
+
+          let gasPrice = await web3.eth.getGasPrice();
+
+          let gasLimit = await web3.eth.estimateGas({
+            gasPrice: web3.utils.toHex(gasPrice),
+            to: Address1,
+            from: address,
+            data: encoded_tx,
+          });
+
+          let trx = await web3.eth.sendTransaction({
+            gasPrice: web3.utils.toHex(gasPrice),
+            gas: web3.utils.toHex(gasLimit),
+            gasPrice: web3.utils.toHex(gasPrice),
+            to: Address1,
+            from: address,
+            data: encoded_tx,
+          }
+          )
+
+          if (trx.transactionHash) {
+            Swal.fire({
+              icon: "success",
+              title: "Transaction Sucessful",
+              footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
+            });
+          }
+
+        } catch (error) {
+          console.log(error)
+          let errMsg = error.code == 100 ? error.message : error.data.message
+          Swal.fire({
+            icon: "error",
+            title: "Transaction Failed",
+            text: errMsg//error.message || error.reason || error.data.message,
+          });
+        }
+      }
+    })
+
+  }
+
+  async function insuranceClaim() {
+    if (!isConnected) {
+      Swal.fire({
+        icon: "error",
+        title: "Transaction Failed",
+        text: "Please connect to Metamask",
+      });
+      return
+    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Claim Insurance'
+
+    }).then(async (result) => {
+
+      if (!result.isConfirmed) {
+        return
+      }
+      try {
+        let insuranceClaim = await contractCall.methods.insuranceClaim()
+        let encoded_tx = insuranceClaim.encodeABI();
+
+
+        let gasPrice = await web3.eth.getGasPrice();
+
+        let gasLimit = await web3.eth.estimateGas({
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        });
+
+        let trx = await web3.eth.sendTransaction({
+          gasPrice: web3.utils.toHex(gasPrice),
+          gas: web3.utils.toHex(gasLimit),
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        }
+        )
+
+        if (trx.transactionHash) {
+          Swal.fire({
+            icon: "success",
+            title: "Transaction Sucessful",
+            footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
+          });
+        }
+
+      } catch (error) {
+        console.log(error.code == 100 ? error.message : "uu")
+        let errMsg = error.code == 100 ? error.message : error.data.message
+        Swal.fire({
+          icon: "error",
+          title: "Transaction Failed",
+          text: errMsg//error.message || error.reason || error.data.message,
+        });
+      }
+
+    })
+
+  }
+
+  async function lastBuyerClaim() {
+    if (!isConnected) {
+      Swal.fire({
+        icon: "error",
+        title: "Transaction Failed",
+        text: "Please connect to Metamask",
+      });
+      return
+    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Claim Last Buyer'
+
+    }).then(async (result) => {
+
+      if (!result.isConfirmed) {
+        return
+      }
+      try {
+        let lastBuyerClaim = await contractCall.methods.lastBuyerClaim()
+        let encoded_tx = lastBuyerClaim.encodeABI();
+
+
+        let gasPrice = await web3.eth.getGasPrice();
+
+        let gasLimit = await web3.eth.estimateGas({
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        });
+
+        let trx = await web3.eth.sendTransaction({
+          gasPrice: web3.utils.toHex(gasPrice),
+          gas: web3.utils.toHex(gasLimit),
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        }
+        )
+
+        if (trx.transactionHash) {
+          Swal.fire({
+            icon: "success",
+            title: "Transaction Sucessful",
+            footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
+          });
+        }
+
+      } catch (error) {
+        console.log(error)
+        let errMsg = error.code == 100 ? error.message : error.data.message
+        Swal.fire({
+          icon: "error",
+          title: "Transaction Failed",
+          text: errMsg//error.message || error.reason || error.data.message,
+        });
+      }
+
+    })
+
+  }
+
+  async function leaderClaim() {
+    if (!isConnected) {
+      Swal.fire({
+        icon: "error",
+        title: "Transaction Failed",
+        text: "Please connect to Metamask",
+      });
+      return
+    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Claim Leader'
+
+    }).then(async (result) => {
+
+      if (!result.isConfirmed) {
+        return
+      }
+      try {
+        let leaderClaim = await contractCall.methods.leaderClaim()
+        let encoded_tx = leaderClaim.encodeABI();
+
+
+        let gasPrice = await web3.eth.getGasPrice();
+
+        let gasLimit = await web3.eth.estimateGas({
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        });
+
+        let trx = await web3.eth.sendTransaction({
+          gasPrice: web3.utils.toHex(gasPrice),
+          gas: web3.utils.toHex(gasLimit),
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        }
+        )
+
+        if (trx.transactionHash) {
+          Swal.fire({
+            icon: "success",
+            title: "Transaction Sucessful",
+            footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
+          });
+        }
+
+      } catch (error) {
+        console.log(error)
+        let errMsg = error.code == 100 ? error.message : error.data.message
+        Swal.fire({
+          icon: "error",
+          title: "Transaction Failed",
+          text: errMsg//error.message || error.reason || error.data.message,
+        });
+      }
+
+    })
+
+  }
+
+
+
 
   return (
     <div className="App">
