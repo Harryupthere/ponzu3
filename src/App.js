@@ -13,7 +13,7 @@ import
  {Address1,
    Abi1,
   } from './connectContract';
-import Web3, { ContractOnceRequiresCallbackError } from 'web3';
+import Web3 from 'web3';
 import { sepolia } from 'viem/chains';
 const web3 = new Web3(window.ethereum);
 
