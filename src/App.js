@@ -53,19 +53,19 @@ function App() {
     setIsConnected(true)
   }
 
-
-  useEffect(() => {
-    if (isConnected) {
-      connectContract();
-      console.log("connected");
+  useEffect(()=>{
+    if (address.length>0) {
+      setIsConnected(true)
     }
-  },[isConnected])
+  },[])
 
   //get the total ether in the contract
   async function contractBalance() {
     try {
            console.log("contract balance");
-         const eth = await contract.contractBalance();
+        // const eth = await contract.contractBalance();
+      const eth = await contractCall.methods.contractBalance().call();
+
          setTotalEth(eth.toString());
          console.log("total ether : ", eth.toString());
     } catch (error) {
