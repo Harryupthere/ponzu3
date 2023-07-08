@@ -11,7 +11,7 @@ import { configureChains, createConfig, WagmiConfig } from 'wagmi'
 import { polygonMumbai, mainnet, polygon, sepolia } from 'wagmi/chains'
 import './App.css';
 import connectContract, {contract} from './connectContract';
-//import Web3 from 'web3';
+import Web3 from 'web3';
 import Abi1 from './abi.json'
 
 //const web3 = new Web3(window.ethereum);
