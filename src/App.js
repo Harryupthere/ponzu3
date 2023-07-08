@@ -25,8 +25,8 @@ const wagmiConfig = createConfig({
 const ethereumClient = new EthereumClient(wagmiConfig, chains);
 function App() {
   
-  const { address, isConnected,isConnecting, isDisconnected } = useAccount()
-  const { isOpen, open, close, setDefaultChain } = useWeb3Modal()
+  //const { address, isConnected,isConnecting, isDisconnected } = useAccount()
+  //const { isOpen, open, close, setDefaultChain } = useWeb3Modal()
   const [value1, setValue1] = useState();
   const [value2, setValue2] = useState();
   const [totalEth, setTotalEth] = useState(0);
@@ -36,8 +36,18 @@ function App() {
   const [back,setBack] = useState(false);
   const [userToken, setUserToken] = useState('0.0');
   const [userEth, setUserEth] = useState('0.0');
-
+  const [address,setAccount] = useState('')
+  const [isConnected,setIsConnected] = useState(false)
   // connect smart contract with ui
+
+
+  const open=async()=>{
+    let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    setAccount(accounts[0]) 
+    setIsConnected(true)
+  }
+
+
   useEffect(() => {
     if (isConnected) {
       connectContract();
@@ -60,7 +70,7 @@ function App() {
     if (isConnected) {
       contractBalance();
     }
-  },[isConnected,chainId,txDone,address])
+  },[])
   
 
 
@@ -245,7 +255,7 @@ function App() {
     if(isConnected){
       getUserTokens();
     }
-  },[isConnected,chainId,txDone, address])
+  },[])
 
   return (
     <div className="App">
