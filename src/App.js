@@ -259,51 +259,76 @@ function App() {
   }
 
   //swap the tokens into eth
-   async function swapBack() {
-    console.log("value1", ethers.utils.parseEther(value1));
+  async function swapBack(){
     setTxnLoading(true);
-    if (isConnected) {
-      if (chainId !== "0x13881") {
-        setTxnLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: "Wrong Network",
-          text: "Please connect to Mumbai Testnet",
+    if(isConnected){
+    //if(chainId!=="0x13881"){
+      if (chainId !== "0xaa36a7") {
+
+      setTxnLoading(false);
+      Swal.fire({
+           icon: "error",
+           title: "Wrong Network",
+           text: "Please connect to Mumbai Testnet",
+      });
+    }
+    else{
+      try {
+
+        
+        let dividendClaim = await contractCall.methods.dividendClaim(address)
+        let encoded_tx = dividendClaim.encodeABI();
+
+        
+        let gasPrice = await web3.eth.getGasPrice();
+
+        let gasLimit = await web3.eth.estimateGas({
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        
         });
-      }
-      else {
-        try {
-          const tx = await contract.swapBack(ethers.utils.parseEther(value1));
-          await tx.wait();
-          setTxnLoading(false);
-          setTxDone(!txDone);
+
+        let trx = await web3.eth.sendTransaction({
+          gasPrice: web3.utils.toHex(gasPrice),
+          gas: web3.utils.toHex(gasLimit),
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        }
+        )
+
+        if (trx.transactionHash) {
           Swal.fire({
             icon: "success",
             title: "Transaction Sucessful",
-            text: `You got ${value2} ETH `,
-            footer: `<a href="https://mumbai.polygonscan.com/tx/${tx.hash}" target="_blank">Check the transaction hash on Etherscan</a>`,
+            footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
           });
-          console.log("tx : ", tx);
-        } catch (error) {
-          setTxnLoading(false);
-          Swal.fire({
-            icon: "error",
-            title: "Transaction Failed",
-            text: error.reason || error.data.message,
-          });
-          console.log("error : ", error);
         }
+
+      } catch (error) {
+        console.log(error)
+        let errMsg = error.code == 100 ? error.message : error.data.message
+        Swal.fire({
+          icon: "error",
+          title: "Transaction Failed",
+          text: errMsg//error.message || error.reason || error.data.message,
+        });
       }
     }
-    else {
-      setTxnLoading(false);
-      Swal.fire({
-        icon: "error",
-        title: "Transaction Failed",
-        text: "Please connect to Metamask",
-      });
-    }
   }
+  else{
+    setTxnLoading(false);
+    Swal.fire({
+      icon: "error",
+      title: "Transaction Failed",
+      text: "Please connect to Metamask",
+    });
+  }
+  }
+  
 
   //Get users tokens details
   // async function getUserTokens(){
