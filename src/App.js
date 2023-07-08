@@ -708,7 +708,92 @@ function App() {
 
   }
 
+  async function fetchCountDown() {
+    try {
 
+      let countDownDate1 = await contractCall.methods.Countdown().call()
+      countDownDate1 = parseInt(countDownDate1)
+      countDownDate1 = countDownDate1 / 10 ** 18
+     // console.log(countDownDate1)
+     // return countDownDate
+
+      let  countDownDate = new Date("Jul 10, 2023 15:37:25").getTime();
+
+
+      //   // Get today's date and time
+      var now = new Date().getTime();
+      
+      // Find the distance between now and the count down date
+      var distance = countDownDate - now;
+     // var distance = countDownDate1
+
+      // Time calculations for days, hours, minutes and seconds
+
+      // var d = Math.floor(distance / (3600 * 24));
+      // var h = Math.floor(distance % (3600 * 24) / 3600);
+      // var m = Math.floor(distance % 3600 / 60);
+      // var s = Math.floor(distance % 60)
+     
+            var d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var s = Math.floor((distance % (1000 * 60)) / 1000);
+      //      setCountdown({days:days,hours:hours,minutes:minutes,seconds:seconds})
+      //console.log({days:d,hours:h,minutes:m,seconds:s})
+
+       setCountdown({days:d,hours:h,minutes:m,seconds:s})
+
+    } catch (error) {
+      console.log("error : ", error);
+    }
+  }
+  
+  async function leaderBoardScore() {
+    try {
+
+       let leaderboardScore = await contractCall.methods.leaderboardScore().call()
+      let arr=[{}]
+     for(let i = 0;i<leaderboardScore[0].length;i++){
+      let amm=parseFloat(leaderboardScore[1][i])
+       
+      amm=(amm/10**18).toLocaleString("fullwide", {
+        useGrouping: false,
+      });
+       
+      arr[i] = {"address":leaderboardScore[0][i],"amount":amm}
+     }
+     setLeaderboard(arr)
+
+    } catch (error) {
+      console.log("error : ", error);
+    }
+  }
+  useEffect( () => {
+    const checkChain = async () => {
+      const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+     
+      setChainId(chainId);
+      //if (chainId !== "0x13881") {
+      if (chainId !== "0xaa36a7") {
+
+        
+
+
+      } else {
+        fetchCountDown()
+      }
+    }
+
+    if (window.ethereum) {
+      setInterval(async () => {
+        fetchCountDown()
+        leaderBoardScore()
+        
+        //checkChain(); 
+      }, 1000)
+    }
+
+  },[])
 
 
   return (
