@@ -42,8 +42,8 @@ function App() {
   const [back, setBack] = useState(false);
   const [userToken, setUserToken] = useState('0.0');
   const [userEth, setUserEth] = useState('0.0');
-  const [address, setAccount] = useState('')
-  const [isConnected, setIsConnected] = useState(false)
+ // const [address, setAccount] = useState('')
+ // const [isConnected, setIsConnected] = useState(false)
   const [countdown, setCountdown] = useState({ days: "", hours: "", minutes: "", seconds: "" })
   const [leaderboard,setLeaderboard] = useState([])
   // connect smart contract with ui
