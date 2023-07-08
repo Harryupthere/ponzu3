@@ -811,7 +811,7 @@ function App() {
                 />
               </div>
               <div>
-                <h1 className='text-6xl text-center text-white font-bold mb-5 ml-5' >00:00:00:00</h1>
+              <h1 className='text-6xl text-center text-white font-bold mb-5 ml-5' >{countdown.days+':'+countdown.hours+':'+countdown.minutes+':'+countdown.seconds}</h1>
 
               </div>
               <div>
@@ -835,7 +835,7 @@ function App() {
                     <h4 className='text-xl mb-2'> Potential payout &nbsp;ETH:</h4>
                     <table className=' mx-auto'>
 
-                      <tr>
+                      {/* <tr>
                         <td>1</td>&nbsp;
                         <td>00.0000...000</td>&nbsp;
                         <td>0.00</td>
@@ -859,7 +859,19 @@ function App() {
                         <td>5</td>&nbsp;
                         <td>00.0000...000</td>&nbsp;
                         <td>0.00</td>
-                      </tr>
+                      </tr> */}
+ {leaderboard.length>0?
+             leaderboard.map((item,index)=>( <tr>
+                <td>{index}</td>&nbsp;
+                <td>{item.address.toString().substring(0,4)}....{item.address.toString().substring(item.address.length-4,item.address.length)}</td>&nbsp;
+                <td>{parseFloat(item.amount).toFixed(2)}</td>
+              </tr>))
+              :
+              <tr>
+                <td>5</td>&nbsp;
+                <td>00.0000...000</td>&nbsp;
+                <td>0.00</td>
+              </tr>}
                     </table>
 
                   </div>
@@ -869,10 +881,10 @@ function App() {
                 <div className='md:mt-[6rem] mt-5'>
                   <h1 className='text-3xl text-white'>Claims:</h1>
                   <div className='py-4 flex gap-4 flex-wrap '>
-                    <button className='bg-green px-5 py-2 text-white rounded-lg text-2xl'>Insurance</button>
-                    <button className='bg-green px-5 py-2 text-white rounded-lg text-2xl'>Leaderboard</button>
-                    <button className='bg-green px-5 py-2 text-white rounded-lg text-2xl'>Pool</button>
-                  </div>
+                  <button className='bg-green px-5 py-2 text-white rounded-lg text-2xl' onClick={() => insuranceClaim()}>Insurance</button>
+                <button className='bg-green px-5 py-2 text-white rounded-lg text-2xl'onClick={() => lastBuyerClaim()}>Leaderboard</button>
+                <button className='bg-green px-5 py-2 text-white rounded-lg text-2xl'onClick={() => leaderClaim()}>Pool</button>
+              </div>
                 </div>
               </div>
               <div className=" max-w-[500px] w-full mr-auto mt-10  ">
@@ -938,21 +950,24 @@ function App() {
                 </p>
 
                 <div className='text-center mb-[-3rem]'>
-                  <button className="bg-green px-[4rem]  border-darkgreen  border-4 font-bold text-2xl py-2 rounded-lg " onClick={back ? swapBack : swap}> Claim</button>
+                <button className="bg-green px-[4rem]  border-darkgreen  border-4 font-bold text-2xl py-2 rounded-lg " onClick={back?swapBack:swapBack}> Claim</button>
                 </div>
 
               </div>
               <div className="">
-
-                <img
-                  src={process.env.PUBLIC_URL + "/images/images/Insurance.png"}
-                  className="max-w-[120px] w-full mb-5"
-                />
-                <img
-                  src={process.env.PUBLIC_URL + "/images/images/Burntime.png"}
-                  className="max-w-[120px] w-full"
-                />
-              </div>
+       
+       <img
+             src={process.env.PUBLIC_URL + "/images/images/Insurance.png"}
+             className="max-w-[120px] w-full mb-5"
+             onClick={() => insurance()}
+           />
+ 
+        <img
+             src={process.env.PUBLIC_URL + "/images/images/Burntime.png"}
+             className="max-w-[120px] w-full"
+             onClick={() => burningTime()}
+           />
+       </div>
 
             </div>
 
