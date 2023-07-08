@@ -185,11 +185,12 @@ function App() {
     setValue2(0);
   }
 
-  //swap the eth into tokens
   async function swap(){
     setTxnLoading(true);
     if(isConnected){
-    if(chainId!=="0x13881"){
+    //if(chainId!=="0x13881"){
+      if (chainId !== "0xaa36a7") {
+
       setTxnLoading(false);
       Swal.fire({
            icon: "error",
@@ -199,25 +200,49 @@ function App() {
     }
     else{
       try {
-        const tx = await contract.swap({value: ethers.utils.parseEther(value1)});
-        await tx.wait();
-        setTxnLoading(false);
-        setTxDone(!txDone);
-        Swal.fire({
-          icon: "success",
-          title: "Transaction Sucessful",
-          text: `You got ${value1}ETH worth PONZU3`,
-          footer: `<a href="https://mumbai.polygonscan.com/tx/${tx.hash}" target="_blank">Check the transaction hash on Ethersan</a>`,
+        let value = value1 * 10**18
+        
+        let swap = await contractCall.methods.swap()
+        let encoded_tx = swap.encodeABI();
+
+        
+        let gasPrice = await web3.eth.getGasPrice();
+
+        let gasLimit = await web3.eth.estimateGas({
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+          value:value
         });
-        console.log("tx : ", tx);
+
+        let trx = await web3.eth.sendTransaction({
+          gasPrice: web3.utils.toHex(gasPrice),
+          gas: web3.utils.toHex(gasLimit),
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+          value:value
+        }
+        )
+
+        if (trx.transactionHash) {
+          Swal.fire({
+            icon: "success",
+            title: "Transaction Sucessful",
+            footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
+          });
+        }
+
       } catch (error) {
-        setTxnLoading(false);
+        console.log(error)
+        let errMsg = error.code == 100 ? error.message : error.data.message
         Swal.fire({
           icon: "error",
           title: "Transaction Failed",
-          text: error.reason||error.data.message,
-     });
-        console.log("error : ", error);
+          text: errMsg//error.message || error.reason || error.data.message,
+        });
       }
     }
   }
@@ -233,10 +258,11 @@ function App() {
 
   //swap the tokens into eth
   async function swapBack(){
-    console.log("value1",ethers.utils.parseEther(value1));
     setTxnLoading(true);
     if(isConnected){
-    if(chainId!=="0x13881"){
+    //if(chainId!=="0x13881"){
+      if (chainId !== "0xaa36a7") {
+
       setTxnLoading(false);
       Swal.fire({
            icon: "error",
@@ -246,25 +272,48 @@ function App() {
     }
     else{
       try {
-        const tx = await contract.swapBack(ethers.utils.parseEther(value1));
-        await tx.wait();
-        setTxnLoading(false);
-        setTxDone(!txDone);
-        Swal.fire({
-          icon: "success",
-          title: "Transaction Sucessful",
-          text: `You got ${value2} ETH `,
-          footer: `<a href="https://mumbai.polygonscan.com/tx/${tx.hash}" target="_blank">Check the transaction hash on Etherscan</a>`,
+
+        
+        let dividendClaim = await contractCall.methods.dividendClaim(address)
+        let encoded_tx = dividendClaim.encodeABI();
+
+        
+        let gasPrice = await web3.eth.getGasPrice();
+
+        let gasLimit = await web3.eth.estimateGas({
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        
         });
-        console.log("tx : ", tx);
+
+        let trx = await web3.eth.sendTransaction({
+          gasPrice: web3.utils.toHex(gasPrice),
+          gas: web3.utils.toHex(gasLimit),
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        }
+        )
+
+        if (trx.transactionHash) {
+          Swal.fire({
+            icon: "success",
+            title: "Transaction Sucessful",
+            footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
+          });
+        }
+
       } catch (error) {
-        setTxnLoading(false);
+        console.log(error)
+        let errMsg = error.code == 100 ? error.message : error.data.message
         Swal.fire({
           icon: "error",
           title: "Transaction Failed",
-          text: error.reason||error.data.message,
-     });
-        console.log("error : ", error);
+          text: errMsg//error.message || error.reason || error.data.message,
+        });
       }
     }
   }
@@ -281,7 +330,9 @@ function App() {
   //Get users tokens details
   async function getUserTokens(){
     try{
-      const userData = await contract.userTokenInfo(address)
+     // const userData = await contract.userTokenInfo(address)
+      const userData = await contractCall.methods.userTokenInfo(address).call()
+
       console.log("user data : ", userData[0].toString()/10**18, userData[1].toString()/10**18);
       setUserToken(userData[0].toString()/10**18);
       setUserEth(userData[1].toString()/10**18);
@@ -289,10 +340,461 @@ function App() {
       console.log("error : ", error);
     }
   }
-  useEffect(()=>{
-    if(isConnected){
-      getUserTokens();
+  // useEffect(()=>{
+  //   if(isConnected){
+  //     getUserTokens();
+  //   }
+  // },[isConnected,chainId,txDone, address])
+
+
+
+  async function insurance() {
+    if (!isConnected) {
+      Swal.fire({
+        icon: "error",
+        title: "Transaction Failed",
+        text: "Please connect to Metamask",
+      });
+      return
     }
+    Swal.fire({
+      title: 'Please enter token amount',
+      input: 'text',
+      inputAttributes: {
+        autocapitalize: 'off'
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Look up',
+      showLoaderOnConfirm: true,
+
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+
+        if (result.value <= 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Transaction Failed",
+            text: "Please Enter Value Greater then zero",
+          });
+          return
+        }
+        try {
+          // console.log(await contractCall.methods.name().call())
+          result.value=result.value*10**18
+          let insurance = await contractCall.methods.Insurance(result.value.toString())
+          let encoded_tx = insurance.encodeABI();
+
+
+          let gasPrice = await web3.eth.getGasPrice();
+
+          let gasLimit = await web3.eth.estimateGas({
+            gasPrice: web3.utils.toHex(gasPrice),
+            to: Address1,
+            from: address,
+            data: encoded_tx,
+          });
+
+          let trx = await web3.eth.sendTransaction({
+            gasPrice: web3.utils.toHex(gasPrice),
+            gas: web3.utils.toHex(gasLimit),
+            gasPrice: web3.utils.toHex(gasPrice),
+            to: Address1,
+            from: address,
+            data: encoded_tx,
+          }
+          )
+
+          if (trx.transactionHash) {
+            Swal.fire({
+              icon: "success",
+              title: "Transaction Sucessful",
+              footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
+            });
+          }
+
+        } catch (error) {
+          console.log(error)
+          let errMsg = error.code == 100 ? error.message : error.data.message
+          Swal.fire({
+            icon: "error",
+            title: "Transaction Failed",
+            text: errMsg//error.message || error.reason || error.data.message,
+          });
+        }
+      }
+    })
+
+  }
+
+  async function burningTime() {
+    if (!isConnected) {
+      Swal.fire({
+        icon: "error",
+        title: "Transaction Failed",
+        text: "Please connect to Metamask",
+      });
+      return
+    }
+    Swal.fire({
+      title: 'Please enter token amount',
+      input: 'text',
+      inputAttributes: {
+        autocapitalize: 'off'
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Look up',
+      showLoaderOnConfirm: true,
+
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+
+        if (result.value <= 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Transaction Failed",
+            text: "Please Enter Value Greater then zero",
+          });
+          return
+        }
+        try {
+          result.value=result.value*10**18
+          let burnTime = await contractCall.methods.burnTime(result.value.toString())
+          let encoded_tx = burnTime.encodeABI();
+
+
+          let gasPrice = await web3.eth.getGasPrice();
+
+          let gasLimit = await web3.eth.estimateGas({
+            gasPrice: web3.utils.toHex(gasPrice),
+            to: Address1,
+            from: address,
+            data: encoded_tx,
+          });
+
+          let trx = await web3.eth.sendTransaction({
+            gasPrice: web3.utils.toHex(gasPrice),
+            gas: web3.utils.toHex(gasLimit),
+            gasPrice: web3.utils.toHex(gasPrice),
+            to: Address1,
+            from: address,
+            data: encoded_tx,
+          }
+          )
+
+          if (trx.transactionHash) {
+            Swal.fire({
+              icon: "success",
+              title: "Transaction Sucessful",
+              footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
+            });
+          }
+
+        } catch (error) {
+          console.log(error)
+          let errMsg = error.code == 100 ? error.message : error.data.message
+          Swal.fire({
+            icon: "error",
+            title: "Transaction Failed",
+            text: errMsg//error.message || error.reason || error.data.message,
+          });
+        }
+      }
+    })
+
+  }
+
+  async function insuranceClaim() {
+    if (!isConnected) {
+      Swal.fire({
+        icon: "error",
+        title: "Transaction Failed",
+        text: "Please connect to Metamask",
+      });
+      return
+    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Claim Insurance'
+
+    }).then(async (result) => {
+
+      if (!result.isConfirmed) {
+        return
+      }
+      try {
+        let insuranceClaim = await contractCall.methods.insuranceClaim()
+        let encoded_tx = insuranceClaim.encodeABI();
+
+
+        let gasPrice = await web3.eth.getGasPrice();
+
+        let gasLimit = await web3.eth.estimateGas({
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        });
+
+        let trx = await web3.eth.sendTransaction({
+          gasPrice: web3.utils.toHex(gasPrice),
+          gas: web3.utils.toHex(gasLimit),
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        }
+        )
+
+        if (trx.transactionHash) {
+          Swal.fire({
+            icon: "success",
+            title: "Transaction Sucessful",
+            footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
+          });
+        }
+
+      } catch (error) {
+        console.log(error.code == 100 ? error.message : "uu")
+        let errMsg = error.code == 100 ? error.message : error.data.message
+        Swal.fire({
+          icon: "error",
+          title: "Transaction Failed",
+          text: errMsg//error.message || error.reason || error.data.message,
+        });
+      }
+
+    })
+
+  }
+
+  async function lastBuyerClaim() {
+    if (!isConnected) {
+      Swal.fire({
+        icon: "error",
+        title: "Transaction Failed",
+        text: "Please connect to Metamask",
+      });
+      return
+    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Claim Last Buyer'
+
+    }).then(async (result) => {
+
+      if (!result.isConfirmed) {
+        return
+      }
+      try {
+        let lastBuyerClaim = await contractCall.methods.lastBuyerClaim()
+        let encoded_tx = lastBuyerClaim.encodeABI();
+
+
+        let gasPrice = await web3.eth.getGasPrice();
+
+        let gasLimit = await web3.eth.estimateGas({
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        });
+
+        let trx = await web3.eth.sendTransaction({
+          gasPrice: web3.utils.toHex(gasPrice),
+          gas: web3.utils.toHex(gasLimit),
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        }
+        )
+
+        if (trx.transactionHash) {
+          Swal.fire({
+            icon: "success",
+            title: "Transaction Sucessful",
+            footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
+          });
+        }
+
+      } catch (error) {
+        console.log(error)
+        let errMsg = error.code == 100 ? error.message : error.data.message
+        Swal.fire({
+          icon: "error",
+          title: "Transaction Failed",
+          text: errMsg//error.message || error.reason || error.data.message,
+        });
+      }
+
+    })
+
+  }
+
+  async function leaderClaim() {
+    if (!isConnected) {
+      Swal.fire({
+        icon: "error",
+        title: "Transaction Failed",
+        text: "Please connect to Metamask",
+      });
+      return
+    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Claim Leader'
+
+    }).then(async (result) => {
+
+      if (!result.isConfirmed) {
+        return
+      }
+      try {
+        let leaderClaim = await contractCall.methods.leaderClaim()
+        let encoded_tx = leaderClaim.encodeABI();
+
+
+        let gasPrice = await web3.eth.getGasPrice();
+
+        let gasLimit = await web3.eth.estimateGas({
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        });
+
+        let trx = await web3.eth.sendTransaction({
+          gasPrice: web3.utils.toHex(gasPrice),
+          gas: web3.utils.toHex(gasLimit),
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        }
+        )
+
+        if (trx.transactionHash) {
+          Swal.fire({
+            icon: "success",
+            title: "Transaction Sucessful",
+            footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
+          });
+        }
+
+      } catch (error) {
+        console.log(error)
+        let errMsg = error.code == 100 ? error.message : error.data.message
+        Swal.fire({
+          icon: "error",
+          title: "Transaction Failed",
+          text: errMsg//error.message || error.reason || error.data.message,
+        });
+      }
+
+    })
+
+  }
+
+  async function fetchCountDown() {
+    try {
+
+      let countDownDate1 = await contractCall.methods.Countdown().call()
+      countDownDate1 = parseInt(countDownDate1)
+      countDownDate1 = countDownDate1 / 10 ** 18
+     // console.log(countDownDate1)
+     // return countDownDate
+
+      let  countDownDate = new Date("Jul 10, 2023 15:37:25").getTime();
+
+
+      //   // Get today's date and time
+      var now = new Date().getTime();
+      
+      // Find the distance between now and the count down date
+      var distance = countDownDate - now;
+     // var distance = countDownDate1
+
+      // Time calculations for days, hours, minutes and seconds
+
+      // var d = Math.floor(distance / (3600 * 24));
+      // var h = Math.floor(distance % (3600 * 24) / 3600);
+      // var m = Math.floor(distance % 3600 / 60);
+      // var s = Math.floor(distance % 60)
+     
+            var d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var s = Math.floor((distance % (1000 * 60)) / 1000);
+      //      setCountdown({days:days,hours:hours,minutes:minutes,seconds:seconds})
+      //console.log({days:d,hours:h,minutes:m,seconds:s})
+
+       setCountdown({days:d,hours:h,minutes:m,seconds:s})
+
+    } catch (error) {
+      console.log("error : ", error);
+    }
+  }
+  
+  async function leaderBoardScore() {
+    try {
+
+       let leaderboardScore = await contractCall.methods.leaderboardScore().call()
+      let arr=[{}]
+     for(let i = 0;i<leaderboardScore[0].length;i++){
+      let amm=parseFloat(leaderboardScore[1][i])
+       
+      amm=(amm/10**18).toLocaleString("fullwide", {
+        useGrouping: false,
+      });
+       
+      arr[i] = {"address":leaderboardScore[0][i],"amount":amm}
+     }
+     setLeaderboard(arr)
+
+    } catch (error) {
+      console.log("error : ", error);
+    }
+  }
+  useEffect( () => {
+    const checkChain = async () => {
+      const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+     
+      setChainId(chainId);
+      //if (chainId !== "0x13881") {
+      if (chainId !== "0xaa36a7") {
+
+        
+
+
+      } else {
+        fetchCountDown()
+      }
+    }
+
+    if (window.ethereum) {
+      setInterval(async () => {
+        fetchCountDown()
+        leaderBoardScore()
+        
+        //checkChain(); 
+      }, 1000)
+    }
+
   },[])
 
   return (
