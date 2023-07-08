@@ -472,13 +472,13 @@ import { useWeb3Modal } from '@web3modal/react'
 import { configureChains, createConfig, WagmiConfig } from 'wagmi'
 import { polygonMumbai, mainnet, polygon, bscTestnet,sepolia } from 'wagmi/chains'
 import './App.css';
-import 
-//connectContract,
- {Address1,
-   Abi1,
-  // contract
-  } from './connectContract';
-import Web3 from 'web3';
+// import 
+// //connectContract,
+//  {Address1,
+//    Abi1,
+//   // contract
+//   } from './connectContract';
+// import Web3 from 'web3';
 import Abi1 from './abi.json'
 
 const web3 = new Web3(window.ethereum);
