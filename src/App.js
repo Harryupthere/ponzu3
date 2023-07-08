@@ -748,52 +748,7 @@ function App() {
     }
   }
   
-  async function leaderBoardScore() {
-    try {
-
-       let leaderboardScore = await contractCall.methods.leaderboardScore().call()
-      let arr=[{}]
-     for(let i = 0;i<leaderboardScore[0].length;i++){
-      let amm=parseFloat(leaderboardScore[1][i])
-       
-      amm=(amm/10**18).toLocaleString("fullwide", {
-        useGrouping: false,
-      });
-       
-      arr[i] = {"address":leaderboardScore[0][i],"amount":amm}
-     }
-     setLeaderboard(arr)
-
-    } catch (error) {
-      console.log("error : ", error);
-    }
-  }
-  useEffect( () => {
-    const checkChain = async () => {
-      const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-     
-      setChainId(chainId);
-      //if (chainId !== "0x13881") {
-      if (chainId !== "0xaa36a7") {
-
-        
-
-
-      } else {
-        fetchCountDown()
-      }
-    }
-
-    if (window.ethereum) {
-      setInterval(async () => {
-        fetchCountDown()
-        leaderBoardScore()
-        
-        //checkChain(); 
-      }, 1000)
-    }
-
-  },[])
+ 
 
 
   return (
