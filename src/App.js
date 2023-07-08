@@ -1004,7 +1004,7 @@ function App() {
         </p> */}
          <p className="text-white  text-center pt-4 text-lg md:text-3xl">
           Your<span className='pt-4 pb-5 px-2 bg-[#FD4674] text-white'>
-          PONZU3 dividends: <span className='text-[#68EB92]'>0.0</span>
+          PONZU3 dividends : <span className='text-[#68EB92]'>0.0</span>
             </span>
            Eth
         </p>
