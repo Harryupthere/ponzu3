@@ -30,14 +30,14 @@ const chains = [
 const projectId = 'e5ee2dc4de76240fc63dcea932f9ad42'
 
 //setup the wagmi config using walletconnect web3modal
-const { publicClient } = configureChains(chains, [w3mProvider({ projectId })])
-const wagmiConfig = createConfig({
-  autoConnect: false,
-  connectors: w3mConnectors({ projectId, version: 1, chains }),
-  publicClient
-})
+// const { publicClient } = configureChains(chains, [w3mProvider({ projectId })])
+// const wagmiConfig = createConfig({
+//   autoConnect: false,
+//   connectors: w3mConnectors({ projectId, version: 1, chains }),
+//   publicClient
+// })
 
-const ethereumClient = new EthereumClient(wagmiConfig, chains);
+// const ethereumClient = new EthereumClient(wagmiConfig, chains);
 function App() {
   
  // const { address, isConnected,isConnecting, isDisconnected } = useAccount()
@@ -92,9 +92,9 @@ function App() {
 
   //check the chain if it is mumbai testnet
   useEffect(() => {
-    const {ethereum} = window;
+    //const {ethereum} = window;
     const checkChain = async() =>{
-         const chainId = await ethereum.request({ method: 'eth_chainId' });
+         const chainId = await window.ethereum.request({ method: 'eth_chainId' });
          
          setChainId(chainId);
         // if(chainId!=="0x13881"){
@@ -196,54 +196,7 @@ function App() {
     setValue2(0);
   }
 
-  //swap the eth into tokens
-  // async function swap(){
-  //   setTxnLoading(true);
-  //   if(isConnected){
-  //  // if(chainId!=="0x13881"){
-  //     if (chainId !== "0xaa36a7") {
-
-  //     setTxnLoading(false);
-  //     Swal.fire({
-  //          icon: "error",
-  //          title: "Wrong Network",
-  //          text: "Please connect to Mumbai Testnet",
-  //     });
-  //   }
-  //   else{
-  //     try {
-  //       const tx = await contract.swap({value: ethers.utils.parseEther(value1)});
-        
-  //       await tx.wait();
-  //       setTxnLoading(false);
-  //       setTxDone(!txDone);
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "Transaction Sucessful",
-  //         text: `You got ${value1}ETH worth PONZU3`,
-  //         footer: `<a href="https://mumbai.polygonscan.com/tx/${tx.hash}" target="_blank">Check the transaction hash on Ethersan</a>`,
-  //       });
-  //       console.log("tx : ", tx);
-  //     } catch (error) {
-  //       setTxnLoading(false);
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Transaction Failed",
-  //         text: error.reason||error.data.message,
-  //    });
-  //       console.log("error : ", error);
-  //     }
-  //   }
-  // }
-  // else{
-  //   setTxnLoading(false);
-  //   Swal.fire({
-  //     icon: "error",
-  //     title: "Transaction Failed",
-  //     text: "Please connect to Metamask",
-  //   });
-  // }
-  // }
+ 
   async function swap(){
     setTxnLoading(true);
     if(isConnected){
@@ -860,7 +813,7 @@ function App() {
     <div className="App">
       <div className='bg-[#00000030]'>
      
-      <WagmiConfig config={wagmiConfig}>
+      {/* <WagmiConfig config={wagmiConfig}> */}
       <div className="bg-bg-img bg-cover min-h-screen bg-no-repeat md:px-5 px-2 py-5 mix-blend-overlay">
       <div className="flex justify-between items-center flex-wrap gap-5 px-5">
         <div >
@@ -1034,11 +987,11 @@ function App() {
     </div>
         
           
-        </WagmiConfig>
+        {/* </WagmiConfig>
 
         <Web3Modal 
           projectId={projectId} ethereumClient={ethereumClient} 
-        />
+        /> */}
         
       </div>
     </div>
