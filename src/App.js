@@ -31,8 +31,8 @@ const wagmiConfig = createConfig({
 const ethereumClient = new EthereumClient(wagmiConfig, chains);
 function App() {
 
-  //const { address, isConnected,isConnecting, isDisconnected } = useAccount()
-  //const { isOpen, open, close, setDefaultChain } = useWeb3Modal()
+  const { address, isConnected,isConnecting, isDisconnected } = useAccount()
+  const { isOpen, open, close, setDefaultChain } = useWeb3Modal()
   const [value1, setValue1] = useState();
   const [value2, setValue2] = useState();
   const [totalEth, setTotalEth] = useState(0);
@@ -49,17 +49,17 @@ function App() {
   // connect smart contract with ui
 
 
-  const open = async () => {
-    let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    setAccount(accounts[0])
-    setIsConnected(true)
-  }
+  // const open = async () => {
+  //   let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+  //   setAccount(accounts[0])
+  //   setIsConnected(true)
+  // }
 
-  useEffect(() => {
-    if (address.length > 0) {
-      setIsConnected(true)
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (address.length > 0) {
+  //     setIsConnected(true)
+  //   }
+  // }, [])
 
   //get the total ether in the contract
   async function contractBalance() {
