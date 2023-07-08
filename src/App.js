@@ -85,8 +85,11 @@ function App() {
     const {ethereum} = window;
     const checkChain = async() =>{
          const chainId = await ethereum.request({ method: 'eth_chainId' });
+         
          setChainId(chainId);
-         if(chainId!=="0x13881"){
+        // if(chainId!=="0x13881"){
+      if (chainId !== "0xaa36a7") {
+
               Swal.fire({
                    icon: "error",
                    title: "Wrong Network",
@@ -138,11 +141,40 @@ function App() {
   },[value1])
 
 
-  //handle the value for input 1
-  function handleValue1(event){
-    const newValue = event.target.value;
-    setTxDone(!txDone);
+  async function handleValue1(event){
+    // const newValue = event.target.value;
+    // setTxDone(!txDone);
+    // setValue1(newValue);
+
+    let newValue;
+    if (event.target.value == 0 || event.target.value == '' || event.target.value == null) {
+      newValue = 0
+    } else {
+      newValue = event.target.value;
+    }
+    
     setValue1(newValue);
+    newValue=newValue*10**18
+
+    try {
+
+      let ponzu3 = await contractCall.methods.swapConvert(newValue.toString()).call()
+      
+      ponzu3 = parseInt(ponzu3)
+      ponzu3=(ponzu3/10**18).toLocaleString("fullwide", {
+        useGrouping: false,
+      });
+      if(isNaN(ponzu3)){
+        setValue2(0);
+      }
+      setValue2(ponzu3)
+     
+    } catch (error) {
+      console.log("error : ", error);
+    }
+     
+
+
   }
 
   //handle the revert button between eth and tokens
