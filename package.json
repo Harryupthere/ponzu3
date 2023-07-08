@@ -1,7 +1,6 @@
 {
   "name": "wallet",
   "version": "0.1.0",
-  "homepage":"https://ponzu3-eta.vercel.app/",
   "private": true,
   "dependencies": {
     "@heroicons/react": "^2.0.18",
@@ -18,8 +17,7 @@
     "sweetalert2": "^11.7.12",
     "viem": "^1.0.7",
     "wagmi": "^1.2.0",
-    "web-vitals": "^2.1.4",
-    "web3": "^4.0.2"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
