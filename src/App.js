@@ -2,7 +2,7 @@ import { MdOutlineSwapVert } from 'react-icons/md';
 import Swal from "sweetalert2";
 import HashLoader from "react-spinners/HashLoader";
 import { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
+import { ContractUnknownEventPayload, ethers } from 'ethers';
 import { useAccount, useDisconnect } from 'wagmi'
 import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum'
 import { Web3Modal } from '@web3modal/react'
@@ -33,7 +33,7 @@ function App() {
 
   const { address, isConnected,isConnecting, isDisconnected } = useAccount()
   const { isOpen, open, close, setDefaultChain } = useWeb3Modal()
-  const [value1, setValue1] = useState();
+  const [value1, setValue1] = useState(0);
   const [value2, setValue2] = useState();
   const [totalEth, setTotalEth] = useState(0);
   const [chainId, setChainId] = useState();
@@ -205,6 +205,7 @@ function App() {
     else{
       try {
         let value = value1 * 10**18
+        console.log(value)
         
         let swap = await contractCall.methods.swap()
         let encoded_tx = swap.encodeABI();
@@ -237,6 +238,9 @@ function App() {
             title: "Transaction Sucessful",
             footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
           });
+          setInterval(()=>{
+            window.location.reload(true)
+          },300)
         }
 
       } catch (error) {
@@ -903,7 +907,8 @@ function App() {
                       onChange={(event) =>
                         handleValue1(event)
                       }
-                      className='max-w-[400px] w-full'
+                      className=''
+                      // 'max-w-[400px] w-full'
                     />
                     <p className='border border-4 rounded-lg border-purple px-1 font-bold min-w-[70px] text-center'>{back ? "PONZU3" : "ETH"}</p>
                   </div>
