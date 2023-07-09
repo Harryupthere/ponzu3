@@ -15,7 +15,7 @@ import Web3 from 'web3';
 import Abi1 from './abi.json'
 
 const web3 = new Web3(window.ethereum);
-let Address1 = "0xEaD6599e2C390EEf35B399D6EB5BFb33834f2157"
+let Address1 = "0x9E865DcA1C701367E2651ADF30B57a6f6fb06581"
 let contractCall = new web3.eth.Contract(Abi1, Address1);
 const chains = [polygonMumbai, mainnet, polygon]
 const projectId = 'e5ee2dc4de76240fc63dcea932f9ad42'
