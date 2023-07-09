@@ -251,6 +251,9 @@ function App() {
           title: "Transaction Failed",
           text: errMsg//error.message || error.reason || error.data.message,
         });
+        setInterval(()=>{
+          window.location.reload(true)
+        },300)
       }
     }
   }
@@ -261,6 +264,9 @@ function App() {
       title: "Transaction Failed",
       text: "Please connect to Metamask",
     });
+    setInterval(()=>{
+      window.location.reload(true)
+    },300)
   }
   }
 
@@ -325,6 +331,9 @@ function App() {
           title: "Transaction Failed",
           text: errMsg//error.message || error.reason || error.data.message,
         });
+        setInterval(()=>{
+          window.location.reload(true)
+        },300)
       }
     }
   }
@@ -335,6 +344,9 @@ function App() {
       title: "Transaction Failed",
       text: "Please connect to Metamask",
     });
+    setInterval(()=>{
+      window.location.reload(true)
+    },300)
   }
   }
   
@@ -431,6 +443,9 @@ function App() {
             title: "Transaction Failed",
             text: errMsg//error.message || error.reason || error.data.message,
           });
+          setInterval(()=>{
+            window.location.reload(true)
+          },300)
         }
       }
     })
@@ -512,6 +527,9 @@ function App() {
             title: "Transaction Failed",
             text: errMsg//error.message || error.reason || error.data.message,
           });
+          setInterval(()=>{
+            window.location.reload(true)
+          },300)
         }
       }
     })
@@ -584,6 +602,9 @@ function App() {
           title: "Transaction Failed",
           text: errMsg//error.message || error.reason || error.data.message,
         });
+        setInterval(()=>{
+          window.location.reload(true)
+        },300)
       }
 
     })
@@ -656,6 +677,9 @@ function App() {
           title: "Transaction Failed",
           text: errMsg//error.message || error.reason || error.data.message,
         });
+        setInterval(()=>{
+          window.location.reload(true)
+        },300)
       }
 
     })
@@ -715,6 +739,9 @@ function App() {
             title: "Transaction Sucessful",
             footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
           });
+          setInterval(()=>{
+            window.location.reload(true)
+          },300)
         }
 
       } catch (error) {
@@ -725,6 +752,9 @@ function App() {
           title: "Transaction Failed",
           text: errMsg//error.message || error.reason || error.data.message,
         });
+        setInterval(()=>{
+          window.location.reload(true)
+        },300)
       }
 
     })
