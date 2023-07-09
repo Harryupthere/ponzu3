@@ -954,7 +954,7 @@ function App() {
                 </div>
               </div>
               <div className=" max-w-[500px] w-full mr-auto mt-10  ">
-                <button onClick={()=>{contractBalance()}}>ETH POOL</button>
+                
                 <h1 className="text-center font-bold text-4xl text-white capitalize ">
                   ETH POOL:
                 </h1>
