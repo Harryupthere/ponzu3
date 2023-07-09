@@ -312,6 +312,9 @@ function App() {
             title: "Transaction Sucessful",
             footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
           });
+          setInterval(()=>{
+            window.location.reload(true)
+          },300)
         }
 
       } catch (error) {
@@ -414,7 +417,11 @@ function App() {
               title: "Transaction Sucessful",
               footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
             });
+            setInterval(()=>{
+              window.location.reload(true)
+            },300)
           }
+        
 
         } catch (error) {
           console.log(error)
@@ -491,8 +498,12 @@ function App() {
               title: "Transaction Sucessful",
               footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
             });
+            setInterval(()=>{
+              window.location.reload(true)
+            },300)
           }
 
+         
         } catch (error) {
           console.log(error)
           let errMsg = error.code == 100 ? error.message : error.data.message
@@ -560,8 +571,11 @@ function App() {
             title: "Transaction Sucessful",
             footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
           });
+          setInterval(()=>{
+            window.location.reload(true)
+          },300)
         }
-
+      
       } catch (error) {
         console.log(error.code == 100 ? error.message : "uu")
         let errMsg = error.code == 100 ? error.message : error.data.message
@@ -629,6 +643,9 @@ function App() {
             title: "Transaction Sucessful",
             footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
           });
+          setInterval(()=>{
+            window.location.reload(true)
+          },300)
         }
 
       } catch (error) {
