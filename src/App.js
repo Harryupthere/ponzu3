@@ -63,21 +63,36 @@ function App() {
 
   //get the total ether in the contract
   async function contractBalance() {
-    try {
-      console.log("contract balance");
-      // const eth = await contract.contractBalance();
-      const eth = await contractCall.methods.contractBalance().call();
+    
+  if(window.ethereum){
+  try {
 
-      setTotalEth(eth.toString());
-      console.log("total ether : ", eth.toString());
-    } catch (error) {
-      console.log("error : ", error);
-    }
+     const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+    
+
+      if(chainId=="0x13881"){
+  
+    console.log("contract balance");
+    // const eth = await contract.contractBalance();
+    const eth = await contractCall.methods.contractBalance().call();
+
+    setTotalEth(eth.toString());
+    console.log("total ether : ", eth.toString());
+      }
+   } catch (error) {
+     console.log("error : ", error);
+  }
+  }else{
+   console.log("install metamask")
+  }
+ 
+
   }
   useEffect(() => {
-    if (isConnected) {
+    
+// if (isConnected) {
       contractBalance();
-    }
+   // }
   }, [])
 
 
@@ -939,6 +954,7 @@ function App() {
                 </div>
               </div>
               <div className=" max-w-[500px] w-full mr-auto mt-10  ">
+                <button onClick={()=>{contractBalance()}}>ETH POOL</button>
                 <h1 className="text-center font-bold text-4xl text-white capitalize ">
                   ETH POOL:
                 </h1>
