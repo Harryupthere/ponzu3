@@ -15,7 +15,7 @@ import Web3 from 'web3';
 import Abi1 from './abi.json'
 
 const web3 = new Web3(window.ethereum);
-let Address1 = "0xc0729752466d1797dAb25afC12b05d7Ba8ac434b"
+let Address1 = "0x10A61a8FB2748314dF4a28332D31f13b895dDD9d"
 let contractCall = new web3.eth.Contract(Abi1, Address1);
 const chains = [polygonMumbai, mainnet, polygon]
 const projectId = 'e5ee2dc4de76240fc63dcea932f9ad42'
@@ -89,8 +89,8 @@ function App() {
       const chainId = await ethereum.request({ method: 'eth_chainId' });
 
       setChainId(chainId);
-      // if(chainId!=="0x13881"){
-      if (chainId !== "0xaa36a7") {
+       if(chainId!=="0x13881"){
+      //if (chainId !== "0xaa36a7") {
 
         Swal.fire({
           icon: "error",
@@ -192,8 +192,8 @@ function App() {
   async function swap(){
     setTxnLoading(true);
     if(isConnected){
-    //if(chainId!=="0x13881"){
-      if (chainId !== "0xaa36a7") {
+    if(chainId!=="0x13881"){
+    //  if (chainId !== "0xaa36a7") {
 
       setTxnLoading(false);
       Swal.fire({
@@ -264,8 +264,8 @@ function App() {
   async function swapBack(){
     setTxnLoading(true);
     if(isConnected){
-    //if(chainId!=="0x13881"){
-      if (chainId !== "0xaa36a7") {
+    if(chainId!=="0x13881"){
+    //  if (chainId !== "0xaa36a7") {
 
       setTxnLoading(false);
       Swal.fire({
@@ -746,8 +746,8 @@ function App() {
       var now = new Date().getTime();
       
       // Find the distance between now and the count down date
-      var distance = countDownDate - now;
-     // var distance = countDownDate1
+     // var distance = countDownDate - now;
+      var distance = countDownDate1
 
       // Time calculations for days, hours, minutes and seconds
 
@@ -774,8 +774,8 @@ function App() {
       const chainId = await window.ethereum.request({ method: 'eth_chainId' });
      
       setChainId(chainId);
-      //if (chainId !== "0x13881") {
-      if (chainId !== "0xaa36a7") {
+      if (chainId !== "0x13881") {
+     // if (chainId !== "0xaa36a7") {
 
         
 
