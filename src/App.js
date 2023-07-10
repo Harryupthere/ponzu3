@@ -33,7 +33,7 @@ function App() {
 
   const { address, isConnected,isConnecting, isDisconnected } = useAccount()
   const { isOpen, open, close, setDefaultChain } = useWeb3Modal()
-  const [value1, setValue1] = useState(0);
+  const [value1, setValue1] = useState();
   const [value2, setValue2] = useState();
   const [totalEth, setTotalEth] = useState(0);
   const [chainId, setChainId] = useState();
@@ -164,11 +164,11 @@ function App() {
       // setValue1(newValue);
   
       let newValue;
-      if (event.target.value == 0 || event.target.value == '' || event.target.value == null) {
-        newValue = 0
-      } else {
+     // if (event.target.value == 0 || event.target.value == '' || event.target.value == null) {
+        //newValue = 0
+      //} else {
         newValue = event.target.value;
-      }
+      //}
       
       setValue1(newValue);
       newValue=newValue*10**18
@@ -967,6 +967,7 @@ function App() {
                       type="text"
                       value={value1}
                       placeholder='0'
+                      pattern="[0-9]*"
                       onChange={(event) =>
                         handleValue1(event)
                       }
