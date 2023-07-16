@@ -15,7 +15,7 @@ import Web3 from 'web3';
 import Abi1 from './abi.json'
 
 const web3 = new Web3(window.ethereum);
-let Address1 = "0x9E865DcA1C701367E2651ADF30B57a6f6fb06581"
+let Address1 = "0x2aa7aEcecD28aF05041F59012602826fb89DcF9d"
 let contractCall = new web3.eth.Contract(Abi1, Address1);
 const chains = [polygonMumbai, mainnet, polygon]
 const projectId = 'e5ee2dc4de76240fc63dcea932f9ad42'
@@ -46,6 +46,7 @@ function App() {
  // const [isConnected, setIsConnected] = useState(false)
   const [countdown, setCountdown] = useState({ days: "", hours: "", minutes: "", seconds: "" })
   const [leaderboard,setLeaderboard] = useState([])
+  const [llCountdown,setllCoundown] = useState()
   // connect smart contract with ui
 
 
@@ -798,22 +799,30 @@ function App() {
   }
   async function fetchCountDown() {
     try {
+      if(window.ethereum){
+
+      
 
       let countDownDate1 = await contractCall.methods.Countdown().call()
       countDownDate1 = parseInt(countDownDate1)
-      countDownDate1 = countDownDate1 / 10 ** 18
-     // console.log(countDownDate1)
+      countDownDate1 = parseInt(countDownDate1 / 10 ** 18)
+       //console.log(countDownDate1,"?")
+      //setllCoundown(countDownDate1)
+      setInterval(()=>{
+        countDownDate1=parseInt(countDownDate1-1)
+        fetchingCountdown1(countDownDate1)
+      },1000)
      // return countDownDate
 
-      let  countDownDate = new Date("Jul 10, 2023 15:37:25").getTime();
+    //   let  countDownDate = new Date("Jul 10, 2023 15:37:25").getTime();
 
 
-      //   // Get today's date and time
-      var now = new Date().getTime();
+    //   //   // Get today's date and time
+    //   var now = new Date().getTime();
       
-      // Find the distance between now and the count down date
-     // var distance = countDownDate - now;
-      var distance = countDownDate1
+    //   // Find the distance between now and the count down date
+    //  // var distance = countDownDate - now;
+    //   var distance = countDownDate1
 
       // Time calculations for days, hours, minutes and seconds
 
@@ -822,15 +831,64 @@ function App() {
       // var m = Math.floor(distance % 3600 / 60);
       // var s = Math.floor(distance % 60)
      
-            var d = Math.floor(distance / (1000 * 60 * 60 * 24));
-            var h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var s = Math.floor((distance % (1000 * 60)) / 1000);
+            // var d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            // var h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            // var m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            // var s = Math.floor((distance % (1000 * 60)) / 1000);
       //      setCountdown({days:days,hours:hours,minutes:minutes,seconds:seconds})
       //console.log({days:d,hours:h,minutes:m,seconds:s})
 
-       setCountdown({days:d,hours:h,minutes:m,seconds:s})
+      // setCountdown({days:d,hours:h,minutes:m,seconds:s})
+      }
+    } catch (error) {
+      console.log("error : ", error);
+    }
+  }
 
+  async function fetchingCountdown() {
+    try {
+if(window.ethereum){
+
+
+
+       var distance = parseInt(llCountdown-1)
+       setllCoundown(distance)
+
+    //   // Time calculations for days, hours, minutes and seconds
+
+      var d = Math.floor(distance / (3600 * 24));
+      var h = Math.floor(distance % (3600 * 24) / 3600);
+      var m = Math.floor(distance % 3600 / 60);
+      var s = Math.floor(distance % 60)
+     // console.log({days:d,hours:h,minutes:m,seconds:s})
+        //setCountdown({days:d,hours:h,minutes:m,seconds:s})
+        
+}
+    } catch (error) {
+      console.log("error : ", error);
+    }
+  }
+
+
+  async function fetchingCountdown1(ss) {
+    try {
+if(window.ethereum){
+
+
+
+       var distance = parseInt(ss-1)
+       setllCoundown(distance)
+
+    //   // Time calculations for days, hours, minutes and seconds
+
+      var d = Math.floor(distance / (3600 * 24));
+      var h = Math.floor(distance % (3600 * 24) / 3600);
+      var m = Math.floor(distance % 3600 / 60);
+      var s = Math.floor(distance % 60)
+      //console.log({days:d,hours:h,minutes:m,seconds:s})
+        setCountdown({days:d,hours:h,minutes:m,seconds:s})
+        
+}
     } catch (error) {
       console.log("error : ", error);
     }
@@ -851,14 +909,21 @@ function App() {
       }
     }
 
-    if (window.ethereum) {
+    ///if (window.ethereum) {
+   // }
+    ///if (window.ethereum) {
+      fetchCountDown()
+
       setInterval(async () => {
-        fetchCountDown()
         leaderBoardScore()
-        
+       // if(llCountdown>0){    
+        //fetchingCountdown()
+
+        //}
         //checkChain(); 
       }, 1000)
-    }
+   // }
+    
 
   },[])
 
