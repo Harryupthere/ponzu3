@@ -15,9 +15,9 @@ import Web3 from 'web3';
 import Abi1 from './abi.json'
 
 const web3 = new Web3(window.ethereum);
-let Address1 = "0x2aa7aEcecD28aF05041F59012602826fb89DcF9d"
+let Address1 = "0xE99aA301b960a52e15cF6748D8C87DaD8C4d0f49"
 let contractCall = new web3.eth.Contract(Abi1, Address1);
-const chains = [polygonMumbai, mainnet, polygon]
+const chains = [polygonMumbai, mainnet, polygon,sepolia]
 const projectId = 'e5ee2dc4de76240fc63dcea932f9ad42'
 
 //setup the wagmi config using walletconnect web3modal
@@ -209,7 +209,7 @@ function App() {
     setTxnLoading(true);
     if(isConnected){
     if(chainId!=="0x13881"){
-    //  if (chainId !== "0xaa36a7") {
+   //   if (chainId !== "0xaa36a7") {
 
       setTxnLoading(false);
       Swal.fire({
@@ -221,7 +221,9 @@ function App() {
     else{
       try {
         let value = value1 * 10**18
-        console.log(value)
+      
+
+        
         
         let swap = await contractCall.methods.swap()
         let encoded_tx = swap.encodeABI();
@@ -258,10 +260,11 @@ function App() {
             window.location.reload(true)
           },300)
         }
+     
 
       } catch (error) {
         console.log(error)
-        let errMsg = error.code == 100 ? error.message : error.data.message
+        let errMsg = error.code == 100 ? error : error
         Swal.fire({
           icon: "error",
           title: "Transaction Failed",
@@ -291,7 +294,7 @@ function App() {
     setTxnLoading(true);
     if(isConnected){
     if(chainId!=="0x13881"){
-    //  if (chainId !== "0xaa36a7") {
+   //  if (chainId !== "0xaa36a7") {
 
       setTxnLoading(false);
       Swal.fire({
@@ -304,7 +307,7 @@ function App() {
       try {
 
         
-        let dividendClaim = await contractCall.methods.dividendClaim(address)
+        let dividendClaim = await contractCall.methods.dividendClaim()
         let encoded_tx = dividendClaim.encodeABI();
 
         
@@ -341,7 +344,7 @@ function App() {
 
       } catch (error) {
         console.log(error)
-        let errMsg = error.code == 100 ? error.message : error.data.message
+        let errMsg = error.code == 100 ? error.message : error
         Swal.fire({
           icon: "error",
           title: "Transaction Failed",
@@ -349,7 +352,7 @@ function App() {
         });
         setInterval(()=>{
           window.location.reload(true)
-        },300)
+        },3000)
       }
     }
   }
@@ -414,8 +417,11 @@ function App() {
           return
         }
         try {
-          // console.log(await contractCall.methods.name().call())
+          let balanceOf = await contractCall.methods.balanceOf(address).call()
+
           result.value=result.value*10**18
+console.log(balanceOf,result.value)
+          if(balanceOf>=result.value){
           let insurance = await contractCall.methods.Insurance(result.value.toString())
           let encoded_tx = insurance.encodeABI();
 
@@ -449,7 +455,13 @@ function App() {
               window.location.reload(true)
             },300)
           }
-        
+          }else{
+            Swal.fire({
+              icon: "error",
+              title: "Transaction Failed",
+              text: "You don't have sufficient balance"//error.message || error.reason || error.data.message,
+            });
+          }
 
         } catch (error) {
           console.log(error)
@@ -499,7 +511,13 @@ function App() {
           return
         }
         try {
+          let balanceOf = await contractCall.methods.balanceOf(address).call()
+
           result.value=result.value*10**18
+
+          if(balanceOf>=result.value){
+
+
           let burnTime = await contractCall.methods.burnTime(result.value.toString())
           let encoded_tx = burnTime.encodeABI();
 
@@ -533,6 +551,13 @@ function App() {
               window.location.reload(true)
             },300)
           }
+        }else{
+          Swal.fire({
+            icon: "error",
+            title: "Transaction Failed",
+            text: "You don't have sufficient balance"//error.message || error.reason || error.data.message,
+          });
+        }
 
          
         } catch (error) {
@@ -687,7 +712,7 @@ function App() {
 
       } catch (error) {
         console.log(error)
-        let errMsg = error.code == 100 ? error.message : error.data.message
+        let errMsg = error.code == 100 ? error : error
         Swal.fire({
           icon: "error",
           title: "Transaction Failed",
@@ -695,7 +720,7 @@ function App() {
         });
         setInterval(()=>{
           window.location.reload(true)
-        },300)
+        },3000)
       }
 
     })
@@ -762,7 +787,7 @@ function App() {
 
       } catch (error) {
         console.log(error)
-        let errMsg = error.code == 100 ? error.message : error.data.message
+        let errMsg = error.code == 100 ? error.message : error
         Swal.fire({
           icon: "error",
           title: "Transaction Failed",
@@ -770,7 +795,7 @@ function App() {
         });
         setInterval(()=>{
           window.location.reload(true)
-        },300)
+        },3000)
       }
 
     })
@@ -899,7 +924,7 @@ if(window.ethereum){
      
       setChainId(chainId);
       if (chainId !== "0x13881") {
-     // if (chainId !== "0xaa36a7") {
+     //if (chainId !== "0xaa36a7") {
 
         
 
