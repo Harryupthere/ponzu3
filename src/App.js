@@ -988,7 +988,7 @@ function App() {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Safty",
+      confirmButtonText: "Safety",
     }).then(async (result) => {
       if (!result.isConfirmed) {
         return;
@@ -996,7 +996,7 @@ function App() {
       try {
         setTxnLoading(true);
 
-        let saftyClaim = await contractCall.methods.safty();
+        let saftyClaim = await contractCall.methods.saftey();
         let encoded_tx = saftyClaim.encodeABI();
 
         let gasPrice = await web3.eth.getGasPrice();
@@ -1266,7 +1266,7 @@ function App() {
                     onClick={safty}
                   >
                     {" "}
-                    Safty
+                    Safety
                   </button>
                 </div>
                 :
