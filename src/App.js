@@ -17,7 +17,7 @@ import "./App.css";
 import connectContract, { contract } from "./connectContract";
 import Web3 from "web3";
 import Abi1 from "./abi.json";
-
+const adminAddress = '0x6E734976E5DC7aa88F5FD4109E9144915CAA9d3C'
 const web3 = new Web3(window.ethereum);
 let Address1 = "0x7D4492604Fe1A7C127D88Dc8c19Da358E98A5A3A"; //"0xEB3681EFA230f3A09A6Fb0015214A2E5bfb563B0"
 let contractCall = new web3.eth.Contract(Abi1, Address1);
@@ -971,6 +971,80 @@ function App() {
     // }
   }, []);
 
+  async function safty() {
+    
+    if (!isConnected) {
+      Swal.fire({
+        icon: "error",
+        title: "Transaction Failed",
+        text: "Please connect to Wallet",
+      });
+      return;
+    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Safty",
+    }).then(async (result) => {
+      if (!result.isConfirmed) {
+        return;
+      }
+      try {
+        setTxnLoading(true);
+
+        let saftyClaim = await contractCall.methods.safty();
+        let encoded_tx = saftyClaim.encodeABI();
+
+        let gasPrice = await web3.eth.getGasPrice();
+
+        let gasLimit = await web3.eth.estimateGas({
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        });
+
+        let trx = await web3.eth.sendTransaction({
+          gasPrice: web3.utils.toHex(gasPrice),
+          gas: web3.utils.toHex(gasLimit),
+          gasPrice: web3.utils.toHex(gasPrice),
+          to: Address1,
+          from: address,
+          data: encoded_tx,
+        });
+
+        if (trx.transactionHash) {
+          Swal.fire({
+            icon: "success",
+            title: "Transaction Sucessful",
+            footer: `<a href="https://etherscan.io/tx/${trx.transactionHash}" target="_blank">Etherscan</a>`,
+          });
+          setInterval(() => {
+            window.location.reload(true);
+          }, 3000);
+        }
+      } catch (error) {
+        setTxnLoading(false);
+
+        console.log(error);
+        let errMsg = error.code == 4001 ? error.message : error;
+        Swal.fire({
+          icon: "error",
+          title: "Transaction Failed",
+          text: errMsg, //error.message || error.reason || error.data.message,
+        });
+        setInterval(() => {
+          window.location.reload(true);
+        }, 3000);
+      }
+    });
+  
+  }
+
   return (
     <div className="App">
       <div className="bg-[#00000030]">
@@ -1185,6 +1259,18 @@ function App() {
                     Claim
                   </button>
                 </div>
+                {address == adminAddress?
+                <div className="text-center mb-[-2rem]">
+                  <button
+                    className="bg-green px-[2rem] lg:px-[4rem]  border-darkgreen  border-4 font-bold text-2xl py-1  lg:py-2 rounded-lg "
+                    onClick={safty}
+                  >
+                    {" "}
+                    Safty
+                  </button>
+                </div>
+                :
+                ""}
               </div>
               <div className="py-10  px-1 overflow-hidden max-w-sm">
                 <img
